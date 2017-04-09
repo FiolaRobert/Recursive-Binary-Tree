@@ -13,11 +13,13 @@ window.onload = function() {
   document.getElementById("zoomIn").addEventListener("click", function( event ) {
       //grow canvas
       zoomIn();
+      sketch();
   });
 
   document.getElementById("zoomOut").addEventListener("click", function( event ) {
       //shrink canvas
       zoomOut();
+      sketch();
   });
 
   document.getElementById("generate").addEventListener("click", function( event ) {
