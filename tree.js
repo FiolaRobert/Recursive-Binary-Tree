@@ -1,5 +1,5 @@
 
-const canvas=document.getElementById('tree');
+const canvas=document.getElementById('canvas');
 const context=canvas.getContext('2d');
 var d=0;
 var max=11;
@@ -65,10 +65,12 @@ function fill(current, depth, angle){//recursive
 //insert 10 items
 function generate(total, max=high)
 {
-this.clear();
+  this.clear();
   this.high=max
-  first=new Item(null, null, null, randomValue());
-  for(var i=0;i<=total;i++)
+  if(total!=0)
+    {first=new Item(null, null, null, randomValue());}
+    else first=null;
+  for(var i=0;i<total;i++)
   {tree(randomValue() );count++}
   sketch();
 }
@@ -329,11 +331,15 @@ function draw(current=first, depth=0, angle=0){//recursive
 function drawline(item){
   if(item.prev!==null)
   {
-    this.line(item.prev.pos.x, item.prev.pos.y, item.pos.x, item.pos.y);
+    this.line(item.prev.pos.x, item.prev.pos.y+5, item.pos.x, item.pos.y);
 
   }
+  context.fillStyle="#fff";
+  context.fillRect(item.pos.x-5, item.pos.y-5,
+								10, 10);
+  context.fillStyle="#000";
   context.font = '10px serif';
-  context.fillText(item.content, item.pos.x, item.pos.y);
+  context.fillText(item.content, item.pos.x-5, item.pos.y+5);
 }
 function line(x1, y1, x2, y2)
 {

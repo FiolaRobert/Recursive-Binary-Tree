@@ -1,21 +1,73 @@
 <HTML>
 <HEAD><style>
 canvas {
-	border: solid 10px #fff;
+	border: solid 5px #fff;
 	image-rendering: optimizeSpeed;
   background: #999;
-	height: 90%;
-	width: 100%;
 	margin: 0 auto;
-	margin-top: 10;
+	margin-top: 30px;
+	cursor: move;
 	position: relative;
+	overflow: scroll;
+}
+
+.toolbar {
+  background-color: #333;
+	position: fixed;
+	top:5;
+  overflow: hidden;
+	width:100%;
+	height: 30px;
+}
+
+/* Style the links inside the navigation bar */
+.toolbar li {
+  float:left;
+  display: inline;;
+  color: #f2f2f2;
+  text-align: center;
+	padding-top: 5px;
+  text-decoration: none;
+  font-size: 17px;
+}
+li.links{
+	color: white;
+  transition: all .1s ease-in;
+  font-family: 'Roboto', sans-serif;
+  display: inline-block;
+  padding-left: 10px;
+}
+
+ul.navigation{
+	margin: 0;
+	align-items: center;
+ 	list-style-type: none;
+}
+.container{
+	position: relative;
+	top:30;
+	width:100%;
+	height:90%;
+	transform: none;
+	overflow: scroll;
 }
 </style>
 <TITLE>Display a recursive tree</TITLE>
 <script type="text/javascript" src='item.js'></script>
+<script type="text/javascript" src='buttons.js'></script>
 </HEAD>
 <BODY BGCOLOR="FFFFFF">
-<canvas id='tree' width='1000' height='400' />
+<div class="toolbar">
+	<ul class="navigation">
+	<li class="links" id="zoomIn"><input type="button" class="zoom" name="zoomin" value="+Zoom In" />
+	<li class="links" id="zoomOut"><input type="button" class="zoom" name="zoomout" value="-Zoom Out" />
+	<li class="links" id="items"><input type="text" class="value" name="new" value="0" />
+	<li class="links" id="generate"><input type="button" class="modify" name="generate" value="Generate New Tree" />
+	<li class="links" id="add"><input type="button" class="modify" name="add" value="Add Item" />
+	<li class="links" id="delete"><input type="button" class="modify" name="delete" value="Delete Item" />
+	</ul>
+</div>
+<div id="container" class="container"><canvas id='canvas' width=1000 height=500/></div>
 <script type="text/javascript" src='tree.js'></script>
 
 </BODY>
