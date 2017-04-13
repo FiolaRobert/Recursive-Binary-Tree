@@ -1,20 +1,24 @@
 
+
 const canvas=document.getElementById('canvas');
 const context=canvas.getContext('2d');
 var d=0;
-var max=11;
-var high=100;
+const max=11;
+const high=100;
 var space=canvas.height/(max+1);
 var first=null;
+var fontSize=10;
 
 var c=first;
 var prev=null;
 var count=0;
 this.generate(50, 100);
 this.sketch();
-console.log("generate(#ofitems)=create new tree");
-console.log("add(value)=add item");
-console.log("cut(value)=remove item");
+console.log("generate(#ofitems)=create new tree\n"+
+"add(value)=add item\n"+
+"cut(value)=remove item\n"+
+"find(value)=find item");
+
 /* fill with random values
 fill(c, d, 0);
 function fill(current, depth, angle){//recursive
@@ -63,8 +67,8 @@ function fill(current, depth, angle){//recursive
 
 }*/
 //insert 10 items
-function generate(total, max=high)
-{
+
+function generate(total, max=high){
   this.clear();
   this.high=max
   if(total!=0)
@@ -74,16 +78,21 @@ function generate(total, max=high)
   {tree(randomValue() );count++}
   sketch();
 }
-function add(value)
-{
-  console.log(tree(value));
+
+function add(value){
+  if(first==null)
+  {first=new Item(null, null, null, value);}
+  else {
+    tree(value);
+  }
   sketch();
 }
+
 function tree(value, current=first){//recursive
   //console.log(count+":"+value);
   if(current!==null)
   {
-    if(value<current.content)
+    if(current.compare(value)>0)
     {
       if(current.hasLeft())
       {
@@ -94,7 +103,7 @@ function tree(value, current=first){//recursive
         return current.left;
       }
     }
-    else if(value>current.content)
+    else if(current.compare(value)<0)
     {
       if(current.hasRight())
       {
@@ -104,17 +113,17 @@ function tree(value, current=first){//recursive
         current.right=new Item(current, null, null, value);
         return current.right;
       }
-    }
+    }//don't add duplicates
   }
 }
-function cut(value)
-{
+
+function cut(value){
 
   console.log(remove(value));
   sketch();
 }
-function remove(value)
-{
+
+function remove(value){
   let item=search(value);
   if(item!==null )
   {
@@ -223,39 +232,21 @@ function remove(value)
   return item;
 
 }
-function tree(value, current=first){//recursive
-  //console.log(count+":"+value);
-  if(current!==null)
-  {
-    if(value<current.content)
-    {
-      if(current.hasLeft())
-      {
-        tree(value, current.left);
-      }
-      else {
-        current.left=new Item(current, null, null, value);
-        return current.left;
-      }
-    }
-    else if(value>current.content)
-    {
-      if(current.hasRight())
-      {
-        tree(value,current.right);
-      }
-      else {
-        current.right=new Item(current, null, null, value);
-        return current.right;
-      }
-    }
+
+function find(value){
+
+  var item=search(value);
+  //console.log(item);
+  context.strokeStyle="#FF0000";
+  while(item.prev!=null){
+      this.line(item.prev.pos.x, item.prev.pos.y+fontSize/2, item.pos.x, item.pos.y);
+      console.log(item);
+      item=item.prev;
+
   }
+  context.strokeStyle="#000";
 }
 
-function find(value)
-{
-  console.log(search(value));
-}
 function search(value, current=first){//recursive
   //console.log(count+":"+value);
 
@@ -283,19 +274,33 @@ function search(value, current=first){//recursive
   return null;//not found
 }
 
-function clear()
-{
+function clear(){
   context.clearRect(0, 0, canvas.width, canvas.height);
 }
-function sketch()
-{
+
+function sketch(current=first){
   this.clear();
-  this.draw();
+  this.draw(current);
 }
+
 function draw(current=first, depth=0, angle=0){//recursive
 
   if(current!=null)
   {
+
+    if(depth==0)//only on first item, show previous items
+    {
+      let split=depth-1;
+      prev=current.prev;
+      while(prev!=null)
+      {
+        prev.pos.x=(canvas.width/2);
+        prev.pos.y=(-split)*(this.space/2);
+        drawline(prev);
+        prev=prev.prev;
+        split++;
+      }
+    }
 
   //set position
     if(depth!==0)
@@ -317,7 +322,7 @@ function draw(current=first, depth=0, angle=0){//recursive
       current.pos.y=this.space;
     }
 
-//set left&right
+    //set left&right
     let left=current.left;
     let right=current.right;
     //call recursive
@@ -331,25 +336,25 @@ function draw(current=first, depth=0, angle=0){//recursive
 function drawline(item){
   if(item.prev!==null)
   {
-    this.line(item.prev.pos.x, item.prev.pos.y+5, item.pos.x, item.pos.y);
+    this.line(item.prev.pos.x, item.prev.pos.y+fontSize/2, item.pos.x, item.pos.y);
 
   }
   context.fillStyle="#fff";
-  context.fillRect(item.pos.x-5, item.pos.y-5,
-								10, 10);
+  context.fillRect(item.pos.x-fontSize/2, item.pos.y-fontSize/2,
+								fontSize, fontSize);
   context.fillStyle="#000";
-  context.font = '10px serif';
-  context.fillText(item.content, item.pos.x-5, item.pos.y+5);
+  context.font = fontSize+'px serif';
+  context.fillText(item.content, item.pos.x-fontSize/2, item.pos.y+fontSize/2);
 }
-function line(x1, y1, x2, y2)
-{
+
+function line(x1, y1, x2, y2){
   context.beginPath();
       context.moveTo(x1, y1);
       context.lineTo(x2, y2);
       context.stroke();
 
 }
-function randomValue()
-{
+
+function randomValue(){
   return parseInt(Math.random()*this.high);
 }

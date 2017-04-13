@@ -39,4 +39,9 @@ class Item
   {
     return this.right!==null;
   }
+	compare(value)
+	{
+		//console.log(this.content+"-"+value+"="+(this.content-value));
+		return this.content-value;
+	}
 }
